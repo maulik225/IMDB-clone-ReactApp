@@ -1,13 +1,27 @@
 import React, {useEffect, useState} from "react"
 import "./movie.css"
 import { useParams } from "react-router-dom"
+import Card from "../../components/card/card"
+import axios from "axios"
 
 const Movie = () => {
     const [currentMovieDetail, setMovie] = useState()
-    const { id } = useParams()
+    const [similarMovies,setSimilarMovies] = useState([])
+    const { id,title } = useParams()
 
+    const recommendedMovies=()=>{
+        axios.post(`http://127.0.0.1:8000`,{
+            "MovieName":title 
+        }).then((res)=>{
+            console.log("api called==>>",res.data)
+            setSimilarMovies(res.data.Similar_Movies) 
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
     useEffect(() => {
         getData()
+        recommendedMovies();
         window.scrollTo(0,0)
     }, [])
 
@@ -58,6 +72,20 @@ const Movie = () => {
                 </div>
             </div>
             <div className="movie__links">
+            <div className="movie__list">
+            <h2 className="list__title">Similar Movies</h2>
+            <div className="list__cards">
+            {
+                      similarMovies.map(movie => (
+                        <Card movie={movie} />
+                    ))
+                }
+            </div>
+        </div>
+                
+                    {/* <Recard movie={similarMovies} /> */}
+                </div>
+            {/* <div className="movie__links">
                 <div className="movie__heading">Useful Links</div>
                 {
                     currentMovieDetail && currentMovieDetail.homepage && <a href={currentMovieDetail.homepage} target="_blank" style={{textDecoration: "none"}}><p><span className="movie__homeButton movie__Button">Homepage <i className="newTab fas fa-external-link-alt"></i></span></p></a>
@@ -82,7 +110,7 @@ const Movie = () => {
                         </>
                     ))
                 }
-            </div>
+            </div> */}
         </div>
     )
 }

@@ -7,14 +7,16 @@ import axios from "axios"
 const Cards = ({movie}) => {
 
     const [isLoading, setIsLoading] = useState(true)
+    const [image, setImage] = useState(null);
+
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false)
         }, 1500)
     }, []) 
-    const [image, setImage] = useState(null);
 
   useEffect(() => {
+      console.log("This is in recards===>",movie)
     const fetchImage = async () => {
       try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movie.movie_id}/images?api_key=45bfb2f547ce6aae28bda7a953d1d52d`);
@@ -27,8 +29,7 @@ const Cards = ({movie}) => {
     };
     fetchImage();
   }, [movie.movie_id]);
-
- 
+  
 
     return <>
     {
